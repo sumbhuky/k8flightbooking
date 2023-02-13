@@ -212,4 +212,32 @@ public class BookingController {
 			return new ResponseEntity<BookingsForCustomer>(bookingsForCustomer, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@GetMapping("v1/api/booking/upcomingBookings")
+	public ResponseEntity<BookingsForCustomer> getUpcomingBookings(@NotEmpty @PathParam("customerId") String customerId) {
+		Map<String, Object> responseMap = new HashMap<String, Object>();
+		try {
+			Customer customer = customerService.getCustomerById(customerId);
+			List<Booking> bookings = bookingService.getUpcomingBookingsByCustomerId(customerId, new Date());
+			
+			// Don't want to send seats for flight
+			for(Booking booking : bookings) {
+				booking.getFlight().setSeats(null);
+			}
+			
+			BookingsForCustomer bookingsForCustomer = new BookingsForCustomer();
+			bookingsForCustomer.setBookings(bookings);
+			bookingsForCustomer.setMessage("Successfully got the upcoming bookings");
+
+			return new ResponseEntity<BookingsForCustomer>(bookingsForCustomer, HttpStatus.OK);
+		} catch(UserNotFoundException e) {
+			BookingsForCustomer bookingsForCustomer = new BookingsForCustomer();
+			bookingsForCustomer.setMessage("User not found exception");
+			return new ResponseEntity<BookingsForCustomer>(bookingsForCustomer, HttpStatus.BAD_REQUEST);
+		} catch(Exception e) {
+			BookingsForCustomer bookingsForCustomer = new BookingsForCustomer();
+			bookingsForCustomer.setMessage("Something went wrong");
+			return new ResponseEntity<BookingsForCustomer>(bookingsForCustomer, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
