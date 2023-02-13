@@ -1,7 +1,5 @@
 package com.flightbooking.entity;
 
-package com.flightbooking.entity;
-
 import java.util.List;
 
 import javax.persistence.Column;
