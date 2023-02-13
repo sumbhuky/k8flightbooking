@@ -149,3 +149,61 @@ public class CustomerController {
 			return internalServerErrorResponse;
 		}
 	}
+	
+	@GetMapping("v1/api/customer/{customerId}")
+	public ResponseEntity<Customer> getCustomer(@PathVariable String customerId) { 
+		try {
+			Customer customer = customerService.getCustomerById(customerId);
+			
+			// Should not return password
+			customer.setPassword("##HIDDEN##");
+			return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+		} catch(UserNotFoundException e) {
+			return new ResponseEntity<Customer>(null, null, HttpStatus.NOT_FOUND);
+		} catch(Exception e) {
+			return new ResponseEntity<Customer>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@DeleteMapping("v1/api/customer/{customerId}")
+	public ResponseEntity<Response> deleteCustomer(@PathVariable String customerId) { 
+		try {
+			customerService.deleteCustomerById(customerId);
+			return userDeletedResponse;
+		} catch(Exception e) {
+			return internalServerErrorResponse;
+		}
+	}
+	
+	@PutMapping("v1/api/customer/{customerId}")
+	public ResponseEntity<Response> updateCustomer(@PathVariable String customerId, 
+			@RequestBody Customer newCustomer) { 
+		try {
+			Customer currentCustomer = customerService.getCustomerById(customerId);
+			
+			if(newCustomer.getDateOfBirth() != null) {
+				currentCustomer.setDateOfBirth(newCustomer.getDateOfBirth());
+			}
+			
+			if(newCustomer.getEmail() != null) {
+				currentCustomer.setEmail(newCustomer.getEmail());
+			}
+			
+			if(newCustomer.getFirstName() != null) {
+				currentCustomer.setFirstName(newCustomer.getFirstName());
+			}
+			
+			if(newCustomer.getLastName() != null) {
+				currentCustomer.setLastName(newCustomer.getLastName());
+			}
+			
+			customerService.updateCustomer(currentCustomer);
+			return userUpdatedResponse;
+		} catch(UserNotFoundException e) {
+			return userNotFoundExceptionResponse;
+		} catch(Exception e) {
+			return internalServerErrorResponse;
+		}
+	}
+	
+}
