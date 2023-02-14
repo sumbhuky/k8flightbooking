@@ -13,25 +13,25 @@ import com.flightbooking.entity.Location;
 import com.flightbooking.entity.Seat;
 import com.flightbooking.exception.FlightNotFoundException;
 import com.flightbooking.repository.FlightRepository;
+import com.flightbooking.service.FlightService;
 
-@Service	
+@Service
 public class FlightServiceImpl implements FlightService {
 	FlightRepository flightRepository;
-	
+
 	@Autowired
 	public FlightServiceImpl(FlightRepository flightRepository) {
 		this.flightRepository = flightRepository;
 	}
 
-	
-	//ADDING FLIGHT DETAILS IN FLIGHT DATABASE
+	// ADDING FLIGHT DETAILS IN FLIGHT DATABASE
 	@Override
 	public boolean addFlight(Flight flight) throws Exception {
 		flightRepository.save(flight);
 		return true;
 	}
 
-	//DELETING FLIGHT DETAIL BY FLIGHT ID
+	// DELETING FLIGHT DETAIL BY FLIGHT ID
 	@Override
 	public boolean deleteFlightById(String id) throws Exception {
 		flightRepository.deleteById(id);
@@ -41,14 +41,13 @@ public class FlightServiceImpl implements FlightService {
 	@Override
 	public Flight getFlightById(String id) throws Exception {
 		Optional<Flight> flight = flightRepository.findById(id);
-		if(flight.isEmpty()) {
+		if (flight.isEmpty()) {
 			throw new FlightNotFoundException();
 		}
-		return flight.get();		
+		return flight.get();
 	}
 
-	
-	//UPDATE FLIGHT DETAILS BY FLIGHT ID
+	// UPDATE FLIGHT DETAILS BY FLIGHT ID
 	@Override
 	public boolean updateFlight(Flight flight) throws Exception {
 		flightRepository.save(flight);
@@ -61,17 +60,16 @@ public class FlightServiceImpl implements FlightService {
 		removeUnavailableSeats(flights);
 		return flights;
 	}
-	
-	
+
 	private void removeUnavailableSeats(List<Flight> flights) {
-		for(Flight flight : flights) {
+		for (Flight flight : flights) {
 			List<Seat> availableSeats = new ArrayList<Seat>();
-			for(Seat seat : flight.getSeats()) {
-				if(seat.getAvailable()) {
+			for (Seat seat : flight.getSeats()) {
+				if (seat.getAvailable()) {
 					availableSeats.add(seat);
 				}
 			}
-			
+
 			flight.setSeats(availableSeats);
 		}
 	}
@@ -79,7 +77,7 @@ public class FlightServiceImpl implements FlightService {
 	@Override
 	public List<Flight> getfindFlightBetweenCities(Location source, Location destination) {
 		return flightRepository.findFlightBetweenCities(source, destination);
-		
+
 	}
 
 	@Override

@@ -7,16 +7,17 @@ import org.springframework.stereotype.Service;
 
 import com.flightbooking.entity.Passenger;
 import com.flightbooking.repository.PassengerRepository;
+import com.flightbooking.service.PassengerService;
 
 @Service
 public class PassengerServiceImpl implements PassengerService {
 	PassengerRepository passengerRepository;
-	
+
 	@Autowired
 	public PassengerServiceImpl(PassengerRepository passengerRepository) {
 		this.passengerRepository = passengerRepository;
 	}
-	
+
 	@Override
 	public Passenger getPassengerById(Long passengerId) throws Exception {
 		return passengerRepository.findById(passengerId).get();

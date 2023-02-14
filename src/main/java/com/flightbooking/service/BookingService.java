@@ -11,4 +11,5 @@ public interface BookingService {
 	List<Booking> getBookingsByCustomerId(String customerId);
 	List<Booking> getUpcomingBookingsByCustomerId(String customerId, Date currentDate);
 	boolean updateBooking(Booking booking);
+	List<Booking> getAllBookings();
 }

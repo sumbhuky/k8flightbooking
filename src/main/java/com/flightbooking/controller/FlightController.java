@@ -1,5 +1,8 @@
 package com.flightbooking.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.flightbooking.Response.Response;
+import com.flightbooking.Response.SearchResult;
 import com.flightbooking.entity.Flight;
 import com.flightbooking.entity.SeatClass;
 import com.flightbooking.exception.FlightAlreadyExistsException;
@@ -24,196 +29,231 @@ import com.flightbooking.exception.FlightNotFoundException;
 import com.flightbooking.request.FlightSearchRequest;
 import com.flightbooking.request.FlightSearchRequestByCities;
 import com.flightbooking.request.FlightSearchRequestByDateAndTime;
-import com.flightbooking.response.Response;
-import com.flightbooking.response.SearchResult;
+
 import com.flightbooking.service.FlightService;
 import com.flightbooking.service.SeatService;
 
 public class FlightController {
 	@Autowired
 	FlightService flightService;
-	
+
 	@Autowired
 	SeatService seatService;
-	
-	//Sanket
-	
-	private static ResponseEntity<Response> flightAddedResponse 
-	= new ResponseEntity<Response>(new Response(null, "Flight added."), HttpStatus.CREATED);
 
-	private static ResponseEntity<Response> flightDeletedResponse 
-	= new ResponseEntity<Response>(new Response(null, "Flight deleted."), HttpStatus.CREATED);
+	private static ResponseEntity<Response> flightAddedResponse = new ResponseEntity<Response>(
+			new Response(null, "Flight added."), HttpStatus.CREATED);
 
-	private static ResponseEntity<Response> flightAlreadyExistsExceptionResponse 
-		= new ResponseEntity<Response>(new Response(null, "Flight id is already taken."), HttpStatus.BAD_REQUEST);
+	private static ResponseEntity<Response> flightDeletedResponse = new ResponseEntity<Response>(
+			new Response(null, "Flight deleted."), HttpStatus.CREATED);
 
-	private static ResponseEntity<Response> internalServerErrorResponse 
-		= new ResponseEntity<Response>(new Response(null, "Something went wrong."), HttpStatus.INTERNAL_SERVER_ERROR);
-	
-	private static ResponseEntity<SearchResult> internalServerErrorResponseForSearch 
-	= new ResponseEntity<SearchResult>(new SearchResult(null, null, null, "Something went wrong."), HttpStatus.INTERNAL_SERVER_ERROR);
+	private static ResponseEntity<Response> flightAlreadyExistsExceptionResponse = new ResponseEntity<Response>(
+			new Response(null, "Flight id is already taken."), HttpStatus.BAD_REQUEST);
 
-	private static ResponseEntity<SearchResult> flightNotFoundExceptionResponse 
-		= new ResponseEntity<SearchResult>(new SearchResult(null, null, null, "Flight not found."), HttpStatus.BAD_REQUEST);
-	
-	
+	private static ResponseEntity<Response> internalServerErrorResponse = new ResponseEntity<Response>(
+			new Response(null, "Something went wrong."), HttpStatus.INTERNAL_SERVER_ERROR);
+
+	private static ResponseEntity<SearchResult> internalServerErrorResponseForSearch = new ResponseEntity<SearchResult>(
+			new SearchResult(null, null, null, "Something went wrong."), HttpStatus.INTERNAL_SERVER_ERROR);
+
+	private static ResponseEntity<SearchResult> flightNotFoundExceptionResponse = new ResponseEntity<SearchResult>(
+			new SearchResult(null, null, null, "Flight not found."), HttpStatus.BAD_REQUEST);
+
 	@PostMapping("v1/api/flight")
 	public ResponseEntity<Response> addFlight(@Valid @RequestBody Flight flight, BindingResult result) {
-		if(result.hasErrors()) {
+		if (result.hasErrors()) {
 			Response response = new Response(result.getFieldErrors(), "Errors found during validation");
 			return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
 		}
-		
-		try { 
+
+		try {
 			flightService.addFlight(flight);
 			return flightAddedResponse;
-		}
-		catch(FlightAlreadyExistsException e) {
+		} catch (FlightAlreadyExistsException e) {
 			return flightAlreadyExistsExceptionResponse;
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			return internalServerErrorResponse;
 		}
 	}
-	
+
+	@GetMapping("v1/api/flight/{flightId}")
+	public ResponseEntity<SearchResult> addFlight(@NotEmpty @PathVariable String flightId) {
+		try {
+			Flight flight = flightService.getFlightById(flightId);
+			return new ResponseEntity<SearchResult>(
+					new SearchResult(null, Arrays.asList(flight), null, "Successfully got the flight."), HttpStatus.OK);
+		} catch (FlightNotFoundException e) {
+			return flightNotFoundExceptionResponse;
+		} catch (Exception e) {
+			return internalServerErrorResponseForSearch;
+		}
+	}
+
 	@DeleteMapping("v1/api/flight/{flightId}")
 	public ResponseEntity<Response> deleteFlight(@NotEmpty @PathVariable String flightId) {
-		try { 
+		try {
 			flightService.deleteFlightById(flightId);
 			return flightDeletedResponse;
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			return internalServerErrorResponse;
 		}
 	}
-	
+
 	@PutMapping("v1/api/flight/{flightId}")
-	public ResponseEntity<Response> updateFlight(@NotEmpty @PathVariable String flightId, @RequestBody Flight newFlight) {
+	public ResponseEntity<Response> updateFlight(@NotEmpty @PathVariable String flightId,
+			@RequestBody Flight newFlight) {
 		try {
 			Flight currentFlight = flightService.getFlightById(flightId);
-			
-			if(newFlight.getAirline() != null) {
+
+			if (newFlight.getAirline() != null) {
 				currentFlight.setAirline(newFlight.getAirline());
 			}
-			
-			if(newFlight.getSource() != null) {
+
+			if (newFlight.getSource() != null) {
 				currentFlight.setSource(newFlight.getSource());
 			}
-			
-			if(newFlight.getDestination() != null) {
+
+			if (newFlight.getDestination() != null) {
 				currentFlight.setDestination(newFlight.getDestination());
 			}
-			
-			if(newFlight.getDeparture() != null) {
+
+			if (newFlight.getDeparture() != null) {
 				currentFlight.setDeparture(newFlight.getDeparture());
 			}
-			
-			if(newFlight.getArrival() != null) {
+
+			if (newFlight.getArrival() != null) {
 				currentFlight.setArrival(newFlight.getArrival());
 			}
-			
-			if(newFlight.getPremiumSeatPrice() != null) {
+
+			if (newFlight.getPremiumSeatPrice() != null) {
 				currentFlight.setPremiumSeatPrice(newFlight.getPremiumSeatPrice());
 			}
-			
-			if(newFlight.getEconomySeatPrice() != null) {
+
+			if (newFlight.getEconomySeatPrice() != null) {
 				currentFlight.setEconomySeatPrice(newFlight.getEconomySeatPrice());
 			}
-			
-			if(newFlight.getBusinessSeatPrice() != null) {
+
+			if (newFlight.getBusinessSeatPrice() != null) {
 				currentFlight.setBusinessSeatPrice(newFlight.getBusinessSeatPrice());
 			}
-			
+
 			flightService.updateFlight(currentFlight);
-			
+
 			return new ResponseEntity<Response>(new Response(null, "Successfully updated flight"), HttpStatus.OK);
-		}
-		catch(FlightNotFoundException e) {
+		} catch (FlightNotFoundException e) {
 			return new ResponseEntity<Response>(new Response(null, e.getMessage()), HttpStatus.NOT_FOUND);
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			return internalServerErrorResponse;
 		}
 	}
-	
+
 	@PostMapping("v1/api/flight/search")
 	public ResponseEntity<SearchResult> search(@Valid @RequestBody FlightSearchRequest request, BindingResult result) {
-		if(result.hasErrors()) {
-			SearchResult response = new SearchResult(result.getFieldErrors(), null, null, "Errors found during validation");
+		if (result.hasErrors()) {
+			SearchResult response = new SearchResult(result.getFieldErrors(), null, null,
+					"Errors found during validation");
 			return new ResponseEntity<SearchResult>(response, HttpStatus.BAD_REQUEST);
 		}
-		
-		try { 
+
+		try {
 			List<Flight> sourceToDestinationFlights = null;
 			List<Flight> destinationToSourceFlights = null;
-			
+
 			sourceToDestinationFlights = getFlights(request);
 
-			if(request.getRoundTripRequest() != null) {
+			if (request.getRoundTripRequest() != null) {
 				destinationToSourceFlights = getFlights(request.getRoundTripRequest());
 			}
-			
-			SearchResult searchResult = new SearchResult(null, sourceToDestinationFlights, destinationToSourceFlights, "Successful search");
+
+			SearchResult searchResult = new SearchResult(null, sourceToDestinationFlights, destinationToSourceFlights,
+					"Successful search");
 			return new ResponseEntity<SearchResult>(searchResult, HttpStatus.OK);
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			return internalServerErrorResponseForSearch;
 		}
 	}
-	
+
 	@PostMapping("v1/api/flight/searchByCities")
-	public ResponseEntity<SearchResult> searchByCities(@Valid @RequestBody FlightSearchRequestByCities request, BindingResult result) {
-		if(result.hasErrors()) {
-			SearchResult response = new SearchResult(result.getFieldErrors(), null, null, "Errors found during validation");
+	public ResponseEntity<SearchResult> searchByCities(@Valid @RequestBody FlightSearchRequestByCities request,
+			BindingResult result) {
+		if (result.hasErrors()) {
+			SearchResult response = new SearchResult(result.getFieldErrors(), null, null,
+					"Errors found during validation");
 			return new ResponseEntity<SearchResult>(response, HttpStatus.BAD_REQUEST);
 		}
-		
-		try { 
-			List<Flight> flights = flightService.getfindFlightBetweenCities(request.getSource(), 
-					request.getDestination()); 
-				
+
+		try {
+			List<Flight> flights = flightService.getfindFlightBetweenCities(request.getSource(),
+					request.getDestination());
+
 			SearchResult searchResult = new SearchResult(null, flights, null, "Successful search");
 			return new ResponseEntity<SearchResult>(searchResult, HttpStatus.OK);
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			return internalServerErrorResponseForSearch;
 		}
 	}
-	
+
 	@PostMapping("v1/api/flight/searchByDateAndTime")
-	public ResponseEntity<SearchResult> searchByDateAndTime(@Valid @RequestBody FlightSearchRequestByDateAndTime request, BindingResult result) {
-		if(result.hasErrors()) {
-			SearchResult response = new SearchResult(result.getFieldErrors(), null, null, "Errors found during validation");
+	public ResponseEntity<SearchResult> searchByDateAndTime(
+			@Valid @RequestBody FlightSearchRequestByDateAndTime request, BindingResult result) {
+		if (result.hasErrors()) {
+			SearchResult response = new SearchResult(result.getFieldErrors(), null, null,
+					"Errors found during validation");
 			return new ResponseEntity<SearchResult>(response, HttpStatus.BAD_REQUEST);
 		}
-		
-		try { 
-			List<Flight> flights = flightService.getfindFlightBetweenDateAndTime(request.getStart(), 
-					request.getEnd()); 
-				
+
+		try {
+			List<Flight> flights = flightService.getfindFlightBetweenDateAndTime(request.getStart(), request.getEnd());
+
 			SearchResult searchResult = new SearchResult(null, flights, null, "Successful search");
 			return new ResponseEntity<SearchResult>(searchResult, HttpStatus.OK);
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			return internalServerErrorResponseForSearch;
 		}
 	}
-	
+
 	@GetMapping("v1/api/flight/searchBySeatClass")
 	public ResponseEntity<SearchResult> searchFlightBySeatSeatClass(@NotEmpty @RequestParam SeatClass seatClass) {
-		try { 
-			
+		try {
+
 			List<Flight> flights = seatService.getFlightsBySeatClass(seatClass);
-			return new ResponseEntity<SearchResult>(new SearchResult(null, flights, null, 
-					"Successfully got the flight."), HttpStatus.OK);
-		}
-		catch(Exception e) {
+			return new ResponseEntity<SearchResult>(
+					new SearchResult(null, flights, null, "Successfully got the flight."), HttpStatus.OK);
+		} catch (Exception e) {
 			return internalServerErrorResponseForSearch;
 		}
 	}
-	
+
+	private List<Flight> getFlights(FlightSearchRequest request) {
+		List<Flight> flights = flightService.genericSearch(request.getSource(), request.getDestination(),
+				request.getStart(), request.getEnd(), request.getDurationInMinutes());
+
+		// if seat class is specified we need to filter out flights searched earlier
+		// based on availability of
+		// specified seat class.
+		List<Flight> flightsAvailable = null;
+		if (request.getSeatClass() != null) {
+			flightsAvailable = seatService.getFlightsBySeatClass(request.getSeatClass());
+		} else {
+			flightsAvailable = seatService.getFlightsByAvailability(true);
+		}
+
+		HashSet<String> availableFlightIds = new HashSet<>();
+		for (Flight flight : flightsAvailable) {
+			availableFlightIds.add(flight.getId());
+		}
+
+		List<Flight> resultFlights = new ArrayList<Flight>();
+		for (Flight flight : flights) {
+			if (availableFlightIds.contains(flight.getId())) {
+				resultFlights.add(flight);
+			}
+		}
+
+		return resultFlights;
+	}
+
 }
