@@ -41,4 +41,10 @@ public class BookingServiceImpl implements BookingService {
 	public List<Booking> getUpcomingBookingsByCustomerId(String customerId, Date currentDate) {
 		return bookingRepository.getUpcomingBookingsByCustomerId(customerId, currentDate);
 	}
+
+	@Override
+	public List<Booking> getAllBookings() {
+		 return bookingRepository.findAll();
+		
+	}
 }
