@@ -63,7 +63,7 @@ public class CustomerServiceImplTest {
 		
 		assertEquals(exception.getMessage(), "Customer already exists.");
     }
-	
+//testing for login customer successfull	
 	@Test
     void loginCustomerSuccessTest() {
 		String userName = "user3";
@@ -133,7 +133,7 @@ public class CustomerServiceImplTest {
 		
 		assertEquals(exception.getMessage(), "Wrong password.");
     }
-	
+// Testing for existing customer
 	@Test
     void getCustomerByIdSuccessTest() {
 		String userName = "user5";
@@ -151,7 +151,7 @@ public class CustomerServiceImplTest {
 		}
     }
 	
-	
+//Testing for non-existing customer	
 	@Test
     void getCustomerByIdUserNotFoundExceptionTest() {
 		String userName = "user6";
@@ -165,7 +165,7 @@ public class CustomerServiceImplTest {
 		
 		assertEquals(exception.getMessage(), "User doesn't exist.");
     }
-	
+//Testing for deleting the customer	
 	@Test
 	void deleteCustomerByIdTest() throws Exception {
 		String userName = "user7";
@@ -174,6 +174,7 @@ public class CustomerServiceImplTest {
 		assertTrue(customerService.deleteCustomerById(userName), "Delete customer by id should return true");
 	}
 	
+//Testing for updating the customer	
 	@Test
 	void updateCustomerTest() throws Exception {
 		String userName = "user8";
