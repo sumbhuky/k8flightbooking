@@ -74,7 +74,6 @@ public class CustomerServiceImplTest {
 		Optional<Customer> existingCustomer = Optional.of(customer);
 		
 		when(customerRepository.findById(userName)).thenReturn(existingCustomer);
-		
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername(userName);
 		loginRequest.setPassword(password);
