@@ -150,7 +150,8 @@ public class CustomerController {
 			return internalServerErrorResponse;
 		}
 	}
-
+	
+ // Getting the entire customer & admin  details by using customerId(username)
 	@GetMapping("v1/api/customer/{customerId}")
 	public ResponseEntity<Customer> getCustomer(@PathVariable String customerId) {
 		try {
@@ -165,7 +166,8 @@ public class CustomerController {
 			return new ResponseEntity<Customer>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	
+//Deleting the customer & admin details by searching the customerId(username)
 	@DeleteMapping("v1/api/customer/{customerId}")
 	public ResponseEntity<Response> deleteCustomer(@PathVariable String customerId) {
 		try {
@@ -175,7 +177,8 @@ public class CustomerController {
 			return internalServerErrorResponse;
 		}
 	}
-
+	
+// updating the customer & admin details by searching the customerId(username)
 	@PutMapping("v1/api/customer/{customerId}")
 	public ResponseEntity<Response> updateCustomer(@PathVariable String customerId, @RequestBody Customer newCustomer) {
 		try {
