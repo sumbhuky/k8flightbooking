@@ -54,6 +54,7 @@ public class Passenger {
 	@JsonIgnore
 	private Booking booking;
 	
+	//Getters & Setters 
 	public String getFirstName() {
 		return firstName;
 	}

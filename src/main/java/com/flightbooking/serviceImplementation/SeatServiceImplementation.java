@@ -15,16 +15,14 @@ import com.flightbooking.service.SeatService;
 
 @Service
 public class SeatServiceImplementation implements SeatService {
-
 	SeatRepository seatRepository;
 	FlightRepository flightRepository;
-
+	
 	@Autowired
 	public SeatServiceImplementation(SeatRepository seatRepository, FlightRepository flightRepository) {
 		this.seatRepository = seatRepository;
 		this.flightRepository = flightRepository;
 	}
-
 	@Override
 	public List<Seat> getSeatsByFlightId(String flightId) {
 		// TODO Auto-generated method stub
@@ -33,7 +31,6 @@ public class SeatServiceImplementation implements SeatService {
 
 	@Override
 	public boolean addSeat(Seat seat, String flightId) {
-
 		Flight flight = flightRepository.findById(flightId).get();
 		seat.setFlight(flight);
 		seatRepository.save(seat);

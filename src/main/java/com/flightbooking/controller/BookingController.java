@@ -65,6 +65,7 @@ public class BookingController {
 	@Autowired
 	PassengerService passengerService;
 
+	//Search all bookings by bookingId
 	@GetMapping("v1/api/booking/{bookingId}")
 	public ResponseEntity<Booking> getBooking(@PathVariable Long bookingId) {
 		Booking booking = bookingService.getBookingById(bookingId);
@@ -75,6 +76,7 @@ public class BookingController {
 		return new ResponseEntity<Booking>(bookingService.getBookingById(bookingId), HttpStatus.OK);
 	}
 
+	//Ticket Booking by User
 	@PostMapping("v1/api/booking")
 	public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody BookingRequest bookingRequest) {
 		List<Seat> seats = null;
@@ -175,6 +177,7 @@ public class BookingController {
 		}
 	}
 
+	//Cancel booking using bookingId
 	@PutMapping("v1/api/booking/{bookingId}/cancel")
 	public ResponseEntity<Response> cancelBooking(@PathVariable Long bookingId) {
 		Booking booking = bookingService.getBookingById(bookingId);
@@ -192,6 +195,7 @@ public class BookingController {
 		return new ResponseEntity<Response>(new Response(null, "Booking cancelled."), HttpStatus.OK);
 	}
 
+	//Retrieving past booking details of customer using customerId
 	@GetMapping("v1/api/booking/history")
 	public ResponseEntity<BookingsForCustomer> getBookingHistory(@NotEmpty @PathParam("customerId") String customerId) {
 		Map<String, Object> responseMap = new HashMap<String, Object>();
@@ -222,6 +226,7 @@ public class BookingController {
 		}
 	}
 
+	//Retrieving upcoming booking details of customer using cusotmerId
 	@GetMapping("v1/api/booking/upcomingBookings")
 	public ResponseEntity<BookingsForCustomer> getUpcomingBookings(
 			@NotEmpty @PathParam("customerId") String customerId) {
@@ -251,6 +256,7 @@ public class BookingController {
 		}
 	}
 
+	//Retrieve all the ticket booking reports
 	@GetMapping("/bookingreportadmin")
 	public ResponseEntity<BookingsForCustomer> getAllBookings() {
 		BookingsForCustomer bookingsForCustomer = new BookingsForCustomer();

@@ -65,6 +65,7 @@ public class Flight {
 	@NotNull
 	private Integer durationInMinutes;
 
+	//Getters & Setters 
 	public List<Seat> getSeats() {
 		return seats;
 	}

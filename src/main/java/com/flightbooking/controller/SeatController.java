@@ -18,19 +18,17 @@ import com.flightbooking.service.SeatService;
 @RestController
 public class SeatController {
 
+	//Injecting SeatService Class
 	@Autowired
 	SeatService seatService;
 
-	// Admin Part
 	// Update or Add the seat By Using Flight Id
 	@PostMapping("v1/api/{flightId}/seat")
 	public ResponseEntity<Response> addSeat(@RequestBody Seat seat, @PathVariable String flightId) {
 		seatService.addSeat(seat, flightId);
 		return new ResponseEntity<Response>(new Response(null, "Seat added."), HttpStatus.CREATED);
-
 	}
-
-	// Admin Part
+	
 	// Getting Seat Details by Using Flight Id
 	@GetMapping("v1/api/seat/{seatId}")
 	public Seat getSeat(@PathVariable String seatId) {
@@ -38,7 +36,6 @@ public class SeatController {
 		return seatService.getSeatBySeatId(seatId);
 	}
 
-	// Admin Part
 	// Delete the Seat By Using Seat Id
 	@DeleteMapping("v1/api/seat/{seatId}")
 	public ResponseEntity<Response> deleteSeat(@PathVariable String seatId) {

@@ -7,7 +7,7 @@ import com.flightbooking.entity.Flight;
 import com.flightbooking.entity.Location;
 
 public interface FlightService {
-	boolean addFlight(Flight flight) throws Exception;
+	Flight addFlight(Flight flight) throws Exception;
 	boolean deleteFlightById(String id) throws Exception;
 	Flight getFlightById(String id) throws Exception;
 	boolean updateFlight(Flight flight) throws Exception;

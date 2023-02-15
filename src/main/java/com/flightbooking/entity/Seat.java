@@ -34,7 +34,7 @@ public class Seat {
 
 	public Seat() {}
 	
-	
+	//Parameterized Contructor for Seat Class
 	public Seat(SeatClass seatClass, String seatNumber, double price) {
 		super();
 		this.seatClass = seatClass;
@@ -43,6 +43,7 @@ public class Seat {
 	}
 
 
+	//Getters & Setters 
 	public SeatClass getSeatClass() {
 		return seatClass;
 	}

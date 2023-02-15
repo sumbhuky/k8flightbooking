@@ -10,7 +10,6 @@ import com.flightbooking.entity.SeatClass;
 
 public interface SeatService {
 	
-	
 	List<Seat> getSeatsByFlightId(String flightId);
 	boolean addSeat(Seat seat, String flightId);
 	boolean addSeats(List<Seat> seats, String flightId);
@@ -21,6 +20,4 @@ public interface SeatService {
 	List<Seat> getSeatsBySeatNumbersAndFlightId(List<String> seatNumber, String flightId);
 	List<Flight> getFlightsBySeatClass(SeatClass seatClass);
 	List<Flight> getFlightsByAvailability(Boolean available);
-	
-
 }

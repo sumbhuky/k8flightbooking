@@ -54,6 +54,7 @@ public class Customer {
     @Column(name = "questionanswers", nullable=true)
     private List<SecurityQuestionAnswer> questionAnswers;
 
+    //Parameterized Contructor for Customer class
 	public Customer(int id, String firstName, String lastName, String dateOfBirth, String email, String username, String password,
     		UserRole role) {
 		super();
@@ -65,7 +66,8 @@ public class Customer {
 		this.password = password;
 		this.role = role;
 	}
-
+	
+	//Getters & Setters 
     public String getDateOfBirth() {
 		return dateOfBirth;
 	}
