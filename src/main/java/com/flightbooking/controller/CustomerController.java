@@ -69,6 +69,7 @@ public class CustomerController {
 	@Autowired
 	CustomerService customerService;
 
+	//signing up the customer and admin
 	@PostMapping("v1/api/customer/signup")
 	public ResponseEntity<Response> signUpCustomer(@Valid @RequestBody Customer customer, BindingResult result) {
 		if (result.hasErrors()) {
@@ -88,6 +89,7 @@ public class CustomerController {
 		}
 	}
 
+	// sign in/login the customer
 	@PostMapping("v1/api/customer/login")
 	public ResponseEntity<Response> logInCustomer(@Valid @RequestBody LoginRequest loginRequest, BindingResult result) {
 		if (result.hasErrors()) {
@@ -108,6 +110,7 @@ public class CustomerController {
 		return loginSuccessResponse;
 	}
 
+	// password reset using security question and answer
 	@PostMapping("v1/api/customer/resetPassword")
 	public ResponseEntity<Response> resetPasswordUsingSecurityQuestion(
 			@Valid @RequestBody PasswordResetRequestUsingSecurityQuestion request, BindingResult result) {
