@@ -31,6 +31,7 @@ public class CustomerServiceImplTest {
 	@InjectMocks
 	private CustomerService customerService = new CustomerServiceImpl();
 	
+	//  testing the sign Up Customer method with junit and mock data
 	@Test
     void signUpCustomerSuccessTest() {
 		String userName = "user1";
@@ -47,6 +48,7 @@ public class CustomerServiceImplTest {
 		}
     }
 	
+	// testing that if the user name is taken or not 
 	@Test
     void signUpCustomerUserNameIsAlreadyTakenExceptionTest() throws Exception {
 		String userName = "user2";
@@ -86,6 +88,7 @@ public class CustomerServiceImplTest {
 		}
     }
 	
+	//testing of login and finding the user is there or not
 	@Test
     void loginCustomerUserNotFoundExceptionTest() {
 		String userName = "user4";
@@ -106,6 +109,7 @@ public class CustomerServiceImplTest {
 		assertEquals(exception.getMessage(), "User doesn't exist.");
     }
 	
+	// wrong password  exception test
 	@Test
     void loginCustomerWrongPasswordExceptionTest() {
 		String userName = "user4";
