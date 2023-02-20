@@ -39,6 +39,7 @@ public class Booking {
 	@Enumerated(EnumType.STRING)
 	private BookingStatus status;
 	
+	//Getters & Setters for 
 	public long getBookingId() {
 		return bookingId;
 	}

@@ -1,5 +1,8 @@
 package com.flightbooking.entity;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -37,14 +41,11 @@ public class Flight {
 	private Location destination;
 	
 	@Column(name = "departure", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-	private Date departure;
+	private LocalDate departure;
 	
+	@Past(message = "future date must have to input")
 	@Column(name = "arrival", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-	private Date arrival;
+	private LocalDate arrival;
 	
 	@OneToMany(mappedBy = "flight")
 	private List<Seat> seats;
@@ -106,19 +107,19 @@ public class Flight {
 		this.destination = destination;
 	}
 
-	public Date getDeparture() {
+	public LocalDate getDeparture() {
 		return departure;
 	}
 
-	public void setDeparture(Date departure) {
+	public void setDeparture(LocalDate departure) {
 		this.departure = departure;
 	}
 
-	public Date getArrival() {
+	public LocalDate getArrival() {
 		return arrival;
 	}
 
-	public void setArrival(Date arrival) {
+	public void setArrival(LocalDate arrival) {
 		this.arrival = arrival;
 	}
 

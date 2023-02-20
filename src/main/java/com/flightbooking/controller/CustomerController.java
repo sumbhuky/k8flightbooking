@@ -66,6 +66,7 @@ public class CustomerController {
 			new Response(null, "Password update failed because " + " no questions are set for the user."),
 			HttpStatus.BAD_REQUEST);
 
+	//Injecting CustomerService class
 	@Autowired
 	CustomerService customerService;
 

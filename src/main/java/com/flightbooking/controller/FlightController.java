@@ -1,13 +1,15 @@
 package com.flightbooking.controller;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.flightbooking.Response.Response;
 import com.flightbooking.Response.SearchResult;
 import com.flightbooking.entity.Flight;
@@ -48,6 +49,10 @@ public class FlightController {
 	
 	private static ResponseEntity<Response> flightAddedResponse 
 	= new ResponseEntity<Response>(new Response(null, "Flight added."), HttpStatus.CREATED);
+	
+	private static ResponseEntity<Response> flightDateResponse 
+	= new ResponseEntity<Response>(new Response(null, "Pleas choose future date to add flights"), HttpStatus.BAD_REQUEST);
+
 
 	private static ResponseEntity<Response> flightDeletedResponse 
 	= new ResponseEntity<Response>(new Response(null, "Flight deleted."), HttpStatus.CREATED);
@@ -67,16 +72,41 @@ public class FlightController {
 	//Adding flight details in the database
 	@PostMapping("v1/api/flight")
 	public ResponseEntity<Response> addFlight(@Valid @RequestBody Flight flight, BindingResult result) {
+		
 		if(result.hasErrors()) {
 			Response response = new Response(result.getFieldErrors(), "Errors found during validation");
 			return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
 		}
+		try {
+			Flight existingFlight = null;
+		
 		
 		try { 
-			flightService.addFlight(flight);
-			return flightAddedResponse;
+			//if the flight id is in the database, it will store in existingFlight
+			//so the existing flight is Not null
+			 existingFlight = flightService.getFlightById(flight.getId());
+		}catch(Exception e) {
+			//do nothing as flight not found exception thrown here
 		}
-		catch(FlightAlreadyExistsException e) {
+		
+		if(existingFlight != null) {
+			throw new FlightAlreadyExistsException();
+		}
+//		LocalDate currentDate = LocalDate.now();
+//		LocalDate flightDate = flight.getArrival();
+//		if (flightDate.isBefore(currentDate)) {
+//	      return flightDateResponse;
+//	    }
+		
+		LocalDate currentDate2 = LocalDate.now();
+		LocalDate flightDate2 = flight.getDeparture();
+		if (flightDate2.isBefore(currentDate2)) {
+	      return flightDateResponse;
+	    }
+		
+		flightService.addFlight(flight);
+		return flightAddedResponse;
+		}catch(FlightAlreadyExistsException e) {
 			return flightAlreadyExistsExceptionResponse;
 		}
 		catch(Exception e) {
@@ -87,7 +117,7 @@ public class FlightController {
 	}
 	
 	//Retrieving flight details using flightId
-	@GetMapping("v1/api/flight/{flightId}")
+	@GetMapping("v1/api/flight/")
 	public ResponseEntity<SearchResult> addFlight(@NotEmpty @PathVariable String flightId) {
 		try { 
 			Flight flight = flightService.getFlightById(flightId);
@@ -104,6 +134,7 @@ public class FlightController {
 	
 	//deleting flight details using flightId
 	@DeleteMapping("v1/api/flight/{flightId}")
+	
 	public ResponseEntity<Response> deleteFlight(@NotEmpty @PathVariable String flightId) {
 		try { 
 			flightService.deleteFlightById(flightId);

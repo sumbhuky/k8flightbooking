@@ -50,18 +50,24 @@ import com.flightbooking.service.SeatService;
 
 @RestController
 public class BookingController {
+	
+	//Injecting BookingService class
 	@Autowired
 	BookingService bookingService;
 
+	//Injecting CustomerService class
 	@Autowired
 	CustomerService customerService;
 
+	//Injecting FlightService class
 	@Autowired
 	FlightService flightService;
 
+	//Injecting SeatService class
 	@Autowired
 	SeatService seatService;
 
+	//Injecting PassengerService class
 	@Autowired
 	PassengerService passengerService;
 
@@ -209,6 +215,7 @@ public class BookingController {
 			// Don't want to send seats for flight
 			for (Booking booking : bookings) {
 				booking.getFlight().setSeats(null);
+				
 			}
 
 			bookingsForCustomer.setBookings(bookings);

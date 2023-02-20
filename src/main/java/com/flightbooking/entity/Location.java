@@ -1,5 +1,6 @@
 package com.flightbooking.entity;
 
+
 public enum Location {
 	BANGALORE("bangalore", "india", "blr", "ind"),
 	MUMBAI("mumbai", "india", "mum", "ind"),

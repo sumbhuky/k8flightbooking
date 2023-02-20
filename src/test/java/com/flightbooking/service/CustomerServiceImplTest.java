@@ -63,6 +63,7 @@ public class CustomerServiceImplTest {
 		
 		assertEquals(exception.getMessage(), "Customer already exists.");
     }
+	
 //testing for login customer successfull	
 	@Test
     void loginCustomerSuccessTest() {

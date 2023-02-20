@@ -1,5 +1,5 @@
 package com.flightbooking.entity;
-
+//
 public enum SecurityQuestion {
 	BIRTHCITY("What is your birth city?"),
 	PETNAME("What is your pet's name?"),
