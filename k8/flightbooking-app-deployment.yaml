@@ -1,0 +1,22 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flightbooking-app-deployment
+  labels:
+    app: flightbooking-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flightbooking-app
+  template:
+    metadata:
+      labels:
+        app: flightbooking-app
+    spec:
+      containers:
+      - name: flightbooking-app
+        image: suman3810docker/kindflightbooking:0.5
+        ports:
+        - containerPort: 8081

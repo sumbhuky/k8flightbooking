@@ -2,6 +2,7 @@ package com.flightbooking.controller;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -92,17 +93,6 @@ public class FlightController {
 		if(existingFlight != null) {
 			throw new FlightAlreadyExistsException();
 		}
-//		LocalDate currentDate = LocalDate.now();
-//		LocalDate flightDate = flight.getArrival();
-//		if (flightDate.isBefore(currentDate)) {
-//	      return flightDateResponse;
-//	    }
-		
-		LocalDate currentDate2 = LocalDate.now();
-		LocalDate flightDate2 = flight.getDeparture();
-		if (flightDate2.isBefore(currentDate2)) {
-	      return flightDateResponse;
-	    }
 		
 		flightService.addFlight(flight);
 		return flightAddedResponse;
@@ -134,7 +124,6 @@ public class FlightController {
 	
 	//deleting flight details using flightId
 	@DeleteMapping("v1/api/flight/{flightId}")
-	
 	public ResponseEntity<Response> deleteFlight(@NotEmpty @PathVariable String flightId) {
 		try { 
 			flightService.deleteFlightById(flightId);
@@ -305,8 +294,5 @@ public class FlightController {
 		catch(Exception e) {
 			return internalServerErrorResponseForSearch;
 		}
-	}
-	
-	
-	
+	}	
 }

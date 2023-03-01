@@ -1,7 +1,6 @@
 package com.flightbooking.entity;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -24,28 +24,39 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Flight {
 	
 	@Id
-	@Column(name = "id", nullable = false)
+	@Column(name = "id")
+	@NotNull
 	@NotEmpty
 	private String id;
 	
-	@Column(name = "airline", nullable = false)
+	@Column(name = "airline")
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Airline airline;
 	
-	@Column(name = "source", nullable = false)
+	@Column(name = "source")
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Location source;
 	
-	@Column(name = "destination", nullable = false)
+	@Column(name = "destination")
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Location destination;
 	
-	@Column(name = "departure", nullable = false)
-	private LocalDate departure;
+	@Column(name = "departure")
+	@NotNull
+	@Future(message = "please add the future date")
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+	private Date departure;
 	
-	@Past(message = "future date must have to input")
-	@Column(name = "arrival", nullable = false)
-	private LocalDate arrival;
+	@Column(name = "arrival")
+	@NotNull
+	@Future(message = "please add the future date")
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+	private Date arrival;
 	
 	@OneToMany(mappedBy = "flight")
 	private List<Seat> seats;
@@ -64,9 +75,8 @@ public class Flight {
 	
 	@Column(name = "duration_in_minutes")
 	@NotNull
-	private Integer durationInMinutes;
-
-	//Getters & Setters 
+	private Long durationInMinutes;
+	
 	public List<Seat> getSeats() {
 		return seats;
 	}
@@ -107,19 +117,19 @@ public class Flight {
 		this.destination = destination;
 	}
 
-	public LocalDate getDeparture() {
+	public Date getDeparture() {
 		return departure;
 	}
 
-	public void setDeparture(LocalDate departure) {
+	public void setDeparture(Date departure) {
 		this.departure = departure;
 	}
 
-	public LocalDate getArrival() {
+	public Date getArrival() {
 		return arrival;
 	}
 
-	public void setArrival(LocalDate arrival) {
+	public void setArrival(Date arrival) {
 		this.arrival = arrival;
 	}
 
@@ -147,11 +157,11 @@ public class Flight {
 		this.economySeatPrice = economySeatPrice;
 	}
 
-	public Integer getDurationInMinutes() {
+	public Long getDurationInMinutes() {
 		return durationInMinutes;
 	}
 
-	public void setDurationInMinutes(Integer durationInMinutes) {
+	public void setDurationInMinutes(Long durationInMinutes) {
 		this.durationInMinutes = durationInMinutes;
 	}
 }
