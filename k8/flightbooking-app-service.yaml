@@ -5,7 +5,7 @@ metadata:
   labels:
     app: flightbooking-app # Labels and Selectors
 spec:
-  type: LoadBalancer # Sets service type
+  type: NodePort # Sets service type
   ports:
     - port: 8081 # Sets port to run the postgres application
   selector:
